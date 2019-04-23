@@ -1,6 +1,7 @@
 var Packet = require('./packet');
 var Vec2 = require('./modules/Vec2');
 var BinaryWriter = require("./packet/BinaryWriter");
+var UserRoleEnum = require("./enum/UserRoleEnum");
 
 function PlayerTracker(gameServer, socket) {
     this.gameServer = gameServer;
@@ -72,8 +73,9 @@ function PlayerTracker(gameServer, socket) {
         // Only scramble if enabled in config
         this.scramble();
     }
-    var UserRoleEnum = require("./enum/UserRoleEnum");
+    
     this.userRole = UserRoleEnum.GUEST;
+    if (this.userRole == UserRoleEnum.MODER) console.log('Test')
 }
 
 module.exports = PlayerTracker;
@@ -131,7 +133,7 @@ PlayerTracker.prototype.getScale = function() {
     else return this._scale = Math.pow(Math.min(64 / scale, 1), 0.4);
 };
 
-PlayerTracker.prototype.joinGame = function(name, skin) {
+PlayerTracker.prototype.joinGame = function(name, skin, isMi) {
     if (this.cells.length) return;
 
     if (skin) this.setSkin(skin);
@@ -167,6 +169,7 @@ PlayerTracker.prototype.joinGame = function(name, skin) {
             packetHandler.sendPacket(new Packet.SetBorder(this, border));
         }
     }
+    if (!this.isMi || isMi)
     this.gameServer.gameMode.onPlayerSpawn(this.gameServer, this);
 };
 

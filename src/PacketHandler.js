@@ -73,7 +73,6 @@ PacketHandler.prototype.handshake_onCompleted = function (protocol, key) {
     this.sendPacket(new Packet.ClearAll());
     this.sendPacket(new Packet.SetBorder(this.socket.playerTracker, this.gameServer.border, this.gameServer.config.serverGamemode, "MultiOgar-Edited " + this.gameServer.version));
     // Send welcome message
-    this.gameServer.sendChatMessage(null, this.socket.playerTracker, "MultiOgar-Edited " + this.gameServer.version);
     if (this.gameServer.config.serverWelcome1)
         this.gameServer.sendChatMessage(null, this.socket.playerTracker, this.gameServer.config.serverWelcome1);
     if (this.gameServer.config.serverWelcome2)
@@ -175,9 +174,6 @@ PacketHandler.prototype.message_onChat = function (message) {
     var tick = this.gameServer.tickCounter;
     var dt = tick - this.lastChatTick;
     this.lastChatTick = tick;
-    if (dt < 25 * 2) {
-        return;
-    }
 
     var flags = message[1];    // flags
     var rvLength = (flags & 2 ? 4:0) + (flags & 4 ? 8:0) + (flags & 8 ? 16:0);
@@ -199,9 +195,7 @@ PacketHandler.prototype.message_onStat = function (message) {
     var tick = this.gameServer.tickCounter;
     var dt = tick - this.lastStatTick;
     this.lastStatTick = tick;
-    if (dt < 25) {
-        return;
-    }
+
     this.sendPacket(new Packet.ServerStat(this.socket.playerTracker));
 };
 
