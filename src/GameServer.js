@@ -520,7 +520,7 @@ GameServer.prototype.onChatMessage = function (from, to, message) {
         }
     }
     if (this.checkBadWord(message) && from && this.config.badWordFilter === 1) {
-        this.sendChatMessage(null, from, "Message failed - Stop insulting others! Keep calm and be friendly please.");
+        this.sendChatMessage(null, from, "You do not have the N word pass. Refrain from sending similiar messages.");
         return;
     }
     this.sendChatMessage(from, to, message);
@@ -633,7 +633,7 @@ GameServer.prototype.mainLoop = function () {
                 if (self.checkRigidCollision(m))
                     self.resolveRigidCollision(m);
                 else if (check != cell)
-                    eatCollisions.unshift(m);
+                    eatCollisions.push(m);
             });
             this.movePlayer(cell, cell.owner);
             this.boostCell(cell);
@@ -783,7 +783,7 @@ GameServer.prototype.checkRigidCollision = function (m) {
                 m.cell.owner.team == m.check.owner.team;
         }
     }
-    var r = this.config.mobilePhysics ? 1 : 12;
+    var r = this.config.mobilePhysics ? 1 : 11;
     if (m.cell.getAge() < r || m.check.getAge() < r) {
         return false; // just splited => ignore
     }
@@ -822,14 +822,15 @@ GameServer.prototype.resolveCollision = function (m) {
     if (m.d >= check._size - cell._size / check.div) {
         return; // too far => can't eat
     }
-
-    if (!check.canEat(cell) || cell.getAge() < 9 && check.cellType == 0) {
-    return;
-  }
+    // Pushsplit code
+    if (!check.canEat(cell) || cell.getAge() < 2) {
+        // check doesn't want to eat
+        return;
+    }
 
     // collision owned => ignore, resolve, or remerge
     if (cell.owner && cell.owner == check.owner) {
-        if (cell.getAge() < 12 || check.getAge() < 12)
+        if (cell.getAge() < 11 || check.getAge() < 11)
             return; // just splited => ignore
     } else if (check._size < cell._size * 1.10 || !check.canEat(cell))
         return; // Cannot eat or cell refuses to be eaten

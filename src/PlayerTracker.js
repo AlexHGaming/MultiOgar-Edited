@@ -131,7 +131,7 @@ PlayerTracker.prototype.getScale = function() {
     else return this._scale = Math.pow(Math.min(64 / scale, 1), 0.4);
 };
 
-PlayerTracker.prototype.joinGame = function(name, skin) {
+PlayerTracker.prototype.joinGame = function(name, skin, isMi) {
     if (this.cells.length) return;
 
     if (skin) this.setSkin(skin);
@@ -167,6 +167,7 @@ PlayerTracker.prototype.joinGame = function(name, skin) {
             packetHandler.sendPacket(new Packet.SetBorder(this, border));
         }
     }
+    if (!this.isMi || isMi)
     this.gameServer.gameMode.onPlayerSpawn(this.gameServer, this);
 };
 

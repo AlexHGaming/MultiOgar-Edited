@@ -26,7 +26,7 @@ PlayerCommand.prototype.executeCommandLine = function (commandLine) {
     if (typeof execute != 'undefined') {
         execute.bind(this)(args);
     } else {
-        this.writeLine("ERROR: Unknown command, type /help for command list");
+        this.writeLine("That command was not found.");
     }
 };
 
@@ -317,7 +317,9 @@ var playerCommands = {
         Logger.write("LOGIN        " + this.playerTracker.socket.remoteAddress + ":" + this.playerTracker.socket.remotePort + " as \"" + user.name + "\"");
         this.playerTracker.userRole = user.role;
         this.playerTracker.userAuth = user.name;
-        this.writeLine("Login done as \"" + user.name + "\"");
+        for (var i = 0; i < this.gameServer.clients.length; i++) {
+            this.gameServer.sendChatMessage(null, i, `${this.playerTracker._name} just logged in as: ${user.name}`);
+        }
         return;
     },
     logout: function (args) {
