@@ -1,15 +1,15 @@
 [
     {
-        "ip":"127.0.0.1",
+        "ip":"",
         "password":"",
         "role":"ADMIN",
-        "name":"Local Administrator"
+        "name":"Staff"
     },
     {
-        "ip":"127.0.0.1",
+        "ip":"",
         "password":"",
         "role":"MODER",
-        "name":"Local Moderator"
+        "name":"Winner"
     },
     {
         "ip":"127.0.0.1",

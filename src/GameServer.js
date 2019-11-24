@@ -5,7 +5,6 @@ var http = require('http');
 var Entity = require('./entity');
 var Vec2 = require('./modules/Vec2');
 var Logger = require('./modules/Logger');
-var UserRoleEnum = require("./enum/UserRoleEnum");
 
 // GameServer implementation
 function GameServer() {
@@ -521,7 +520,7 @@ GameServer.prototype.onChatMessage = function (from, to, message) {
         }
     }
     if (this.checkBadWord(message) && from && this.config.badWordFilter === 1) {
-        this.sendChatMessage(null, from, "Message failed - Your message seemed to contain offensive language. Please retry to send your message without any offensive language.");
+        this.sendChatMessage(null, from, "Message failed - Stop insulting others! Keep calm and be friendly please.");
         return;
     }
     this.sendChatMessage(from, to, message);
@@ -634,7 +633,7 @@ GameServer.prototype.mainLoop = function () {
                 if (self.checkRigidCollision(m))
                     self.resolveRigidCollision(m);
                 else if (check != cell)
-                    eatCollisions.push(m);
+                    eatCollisions.unshift(m);
             });
             this.movePlayer(cell, cell.owner);
             this.boostCell(cell);
@@ -784,7 +783,7 @@ GameServer.prototype.checkRigidCollision = function (m) {
                 m.cell.owner.team == m.check.owner.team;
         }
     }
-    var r = this.config.mobilePhysics ? 1 : 11;
+    var r = this.config.mobilePhysics ? 1 : 12;
     if (m.cell.getAge() < r || m.check.getAge() < r) {
         return false; // just splited => ignore
     }
@@ -824,15 +823,13 @@ GameServer.prototype.resolveCollision = function (m) {
         return; // too far => can't eat
     }
 
-    // Pushsplit code
-    if (!check.canEat(cell) || cell.getAge() < 2) {
-        // check doesn't want to eat
-        return;
-    }
+    if (!check.canEat(cell) || cell.getAge() < 9 && check.cellType == 0) {
+    return;
+  }
 
     // collision owned => ignore, resolve, or remerge
     if (cell.owner && cell.owner == check.owner) {
-        if (cell.getAge() < 11 || check.getAge() < 11)
+        if (cell.getAge() < 12 || check.getAge() < 12)
             return; // just splited => ignore
     } else if (check._size < cell._size * 1.10 || !check.canEat(cell))
         return; // Cannot eat or cell refuses to be eaten
@@ -880,7 +877,7 @@ GameServer.prototype.spawnCells = function () {
             var maxGrow = this.config.foodMaxSize - cell._size;
             cell.setSize(cell._size += maxGrow * Math.random());
         }
-        cell.color = this.getRandomColor(); 
+        cell.color = this.getRandomColor();
         this.addNode(cell);
     }
 

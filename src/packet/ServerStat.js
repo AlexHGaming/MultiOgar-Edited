@@ -28,6 +28,7 @@ ServerStat.prototype.build = function (protocol) {
         'playersTotal': totalPlayers,
         'playersAlive': alivePlayers,
         'playersSpect': spectPlayers,
+        'playersLimit': gameServer.config.serverMaxConnections
     };
     var json = JSON.stringify(obj);
     // Serialize

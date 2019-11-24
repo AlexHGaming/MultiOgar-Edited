@@ -53,7 +53,7 @@ Virus.prototype.onEaten = function(cell) {
 
     if (cellMass / cellsLeft < splitMin) {
         // powers of 2 monotone splits
-        splitCount = 2;
+        splitCount = 2.1;
         splitMass = cellMass / splitCount;
         while (splitMass > splitMin && splitCount * 2 < cellsLeft)
             splitMass = cellMass / (splitCount *= 2);
@@ -63,8 +63,8 @@ Virus.prototype.onEaten = function(cell) {
     }
 
     // half-half splits
-    var splitMass = cellMass / 2;
-    var massLeft = cellMass / 2;
+    var splitMass = cellMass / 1.8;
+    var massLeft = cellMass / 1.8;
     while (cellsLeft-- > 0) {
         if (massLeft / cellsLeft < splitMin) {
             splitMass = massLeft / cellsLeft;

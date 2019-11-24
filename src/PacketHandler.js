@@ -72,11 +72,6 @@ PacketHandler.prototype.handshake_onCompleted = function (protocol, key) {
     // Send handshake response
     this.sendPacket(new Packet.ClearAll());
     this.sendPacket(new Packet.SetBorder(this.socket.playerTracker, this.gameServer.border, this.gameServer.config.serverGamemode, "MultiOgar-Edited " + this.gameServer.version));
-    // Send welcome message
-    if (this.gameServer.config.serverWelcome1)
-        this.gameServer.sendChatMessage(null, this.socket.playerTracker, this.gameServer.config.serverWelcome1);
-    if (this.gameServer.config.serverWelcome2)
-        this.gameServer.sendChatMessage(null, this.socket.playerTracker, this.gameServer.config.serverWelcome2);
     if (this.gameServer.config.serverChat == 0)
         this.gameServer.sendChatMessage(null, this.socket.playerTracker, "This server's chat is disabled.");
     if (this.protocol < 4)
@@ -88,9 +83,6 @@ PacketHandler.prototype.message_onJoin = function (message) {
     var tick = this.gameServer.tickCounter;
     var dt = tick - this.lastJoinTick;
     this.lastJoinTick = tick;
-    if (dt < 25 || this.socket.playerTracker.cells.length !== 0) {
-        return;
-    }
     var reader = new BinaryReader(message);
     reader.skipBytes(1);
     var text = null;
@@ -174,6 +166,9 @@ PacketHandler.prototype.message_onChat = function (message) {
     var tick = this.gameServer.tickCounter;
     var dt = tick - this.lastChatTick;
     this.lastChatTick = tick;
+    if (dt < 25) {
+        return;
+    }
 
     var flags = message[1];    // flags
     var rvLength = (flags & 2 ? 4:0) + (flags & 4 ? 8:0) + (flags & 8 ? 16:0);
@@ -195,7 +190,9 @@ PacketHandler.prototype.message_onStat = function (message) {
     var tick = this.gameServer.tickCounter;
     var dt = tick - this.lastStatTick;
     this.lastStatTick = tick;
-
+    if (dt < 25) {
+        return;
+    }
     this.sendPacket(new Packet.ServerStat(this.socket.playerTracker));
 };
 
