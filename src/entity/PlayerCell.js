@@ -28,7 +28,6 @@ PlayerCell.prototype.onAdd = function (gameServer) {
     this.owner.cells.push(this);
     this.owner.socket.packetHandler.sendPacket(new Packet.AddNode(this.owner, this));
     this.gameServer.nodesPlayer.unshift(this);
-
     // Gamemode actions
     gameServer.gameMode.onCellAdd(this);
 };

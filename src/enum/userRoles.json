@@ -1,13 +1,13 @@
 [
     {
         "ip":"",
-        "password":"",
+        "password": "1",
         "role":"ADMIN",
         "name":"Staff"
     },
     {
         "ip":"",
-        "password":"",
+        "password":"2",
         "role":"MODER",
         "name":"Winner"
     },

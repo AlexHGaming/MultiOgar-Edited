@@ -520,7 +520,7 @@ GameServer.prototype.onChatMessage = function (from, to, message) {
         }
     }
     if (this.checkBadWord(message) && from && this.config.badWordFilter === 1) {
-        this.sendChatMessage(null, from, "You do not have the N word pass. Refrain from sending similiar messages.");
+        this.sendChatMessage(null, from, "Message failed - Your message seemed to contain offensive language. Please retry to send your message without any offensive language.");
         return;
     }
     this.sendChatMessage(from, to, message);
@@ -783,7 +783,7 @@ GameServer.prototype.checkRigidCollision = function (m) {
                 m.cell.owner.team == m.check.owner.team;
         }
     }
-    var r = this.config.mobilePhysics ? 1 : 11;
+    var r = this.config.mobilePhysics ? 1 : 13;
     if (m.cell.getAge() < r || m.check.getAge() < r) {
         return false; // just splited => ignore
     }
@@ -822,6 +822,7 @@ GameServer.prototype.resolveCollision = function (m) {
     if (m.d >= check._size - cell._size / check.div) {
         return; // too far => can't eat
     }
+
     // Pushsplit code
     if (!check.canEat(cell) || cell.getAge() < 2) {
         // check doesn't want to eat
@@ -830,9 +831,9 @@ GameServer.prototype.resolveCollision = function (m) {
 
     // collision owned => ignore, resolve, or remerge
     if (cell.owner && cell.owner == check.owner) {
-        if (cell.getAge() < 11 || check.getAge() < 11)
+        if (cell.getAge() < 13 || check.getAge() < 13)
             return; // just splited => ignore
-    } else if (check._size < cell._size * 1.10 || !check.canEat(cell))
+    } else if (check._size < cell._size * 1.15 || !check.canEat(cell))
         return; // Cannot eat or cell refuses to be eaten
 
     // Consume effect
